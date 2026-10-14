@@ -1,0 +1,44 @@
+package com.example.exsession04.Controller;
+
+import com.example.exsession04.Models.Entities.Course;
+import com.example.exsession04.Models.Request.CourseCreateRequest;
+import com.example.exsession04.Models.Request.CourseUpdateRequest;
+import com.example.exsession04.Models.Responses.ApiResponse;
+import com.example.exsession04.Models.Responses.CourseResponse;
+import com.example.exsession04.Models.Services.CourseService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/api/v3/courses")
+public class CourseController {
+    private final CourseService courseService;
+    @GetMapping
+    public ResponseEntity<?> getAllCourses() {
+        List<CourseResponse> courses = courseService.findAllCourses();
+        return ResponseEntity.ok(new ApiResponse<>(true, "Get courses successfully", courses));
+    }
+    @PostMapping
+    public ResponseEntity<?> createCourse(@RequestBody CourseCreateRequest request) {
+        try {
+            courseService.createCourse(request);
+            return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse<>(true, "Create course successfully", null));
+        }catch (RuntimeException e){
+            return ResponseEntity.badRequest().body(new ApiResponse<>(false,e.getMessage(), null));
+        }
+    }
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateCourse(@PathVariable Long id, @RequestBody CourseUpdateRequest request) {
+        try {
+            courseService.updateCourse(id, request);
+            return ResponseEntity.ok(new ApiResponse<>(true, "Update course successfully", null));
+        }catch (RuntimeException e){
+            return ResponseEntity.badRequest().body(new ApiResponse<>(false,e.getMessage(), null));
+        }
+    }
+}
