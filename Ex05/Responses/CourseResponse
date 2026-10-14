@@ -1,0 +1,14 @@
+package com.example.exsession04.Models.Responses;
+
+import com.example.exsession04.Models.Entities.CoureStatus;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
+@Data
+@AllArgsConstructor
+public class CourseResponse {
+    private Long id;
+    private String title;
+    private CoureStatus status;
+    private CourseInstructorResponse instructor;
+}
